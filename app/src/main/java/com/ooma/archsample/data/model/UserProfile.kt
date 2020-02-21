@@ -1,6 +1,6 @@
 package com.ooma.archsample.data.model
 
-data class User(
+data class UserProfile(
     val avatar_url: String,
     val bio: String,
     val blog: String,

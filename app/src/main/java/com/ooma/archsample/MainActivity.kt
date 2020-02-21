@@ -3,6 +3,7 @@ package com.ooma.archsample
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.ooma.archsample.presentation.view.LoginFragment
+import com.ooma.archsample.presentation.view.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, LoginFragment.newInstance())
+                .replace(R.id.container, ProfileFragment.newInstance())
                 .commit()
         }
     }

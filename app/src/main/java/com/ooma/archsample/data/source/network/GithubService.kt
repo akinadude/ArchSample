@@ -1,6 +1,6 @@
 package com.ooma.archsample.data.source.network
 
-import com.ooma.archsample.data.model.User
+import com.ooma.archsample.data.model.UserProfile
 import com.ooma.archsample.data.model.UsersSearchResult
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -14,7 +14,7 @@ interface GithubService {
     fun login(@Query("q") searchText: String): Single<UsersSearchResult>
 
     @GET("/users/{username}")
-    fun getUser(@Path("username") username: String): Single<User>
+    fun getUserProfile(@Path("username") username: String): Single<UserProfile>
 
     @GET("/search/users")
     fun searchUsers(@Query("q") searchText: String): Single<UsersSearchResult>
