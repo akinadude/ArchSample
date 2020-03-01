@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.ooma.archsample.R
-import com.ooma.archsample.Result
+import com.ooma.archsample.data.model.UserProfile
+import com.ooma.archsample.extension.failure
+import com.ooma.archsample.extension.observe
+import com.ooma.archsample.extension.viewModel
 import com.ooma.archsample.presentation.viewmodel.ProfileViewModel
-import kotlinx.android.synthetic.main.profile_fragment.*
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
 
@@ -18,26 +19,31 @@ class ProfileFragment : Fragment() {
         fun newInstance() = ProfileFragment()
     }
 
-    private val viewModel: ProfileViewModel by lazy {
-        ViewModelProviders.of(this).get(ProfileViewModel::class.java)
-    }
+    private lateinit var profileViewModel: ProfileViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.profile_fragment, container, false)
+    ): View = inflater.inflate(R.layout.fragment_profile, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         profile_username.text = "This is a username"
 
-        viewModel.getUserProfile("JohnnySC")//akinadude
-        viewModel.profile.observe(viewLifecycleOwner, Observer { result ->
-            when(result) {
-                is Result.Success -> profile_username.text = result.data.login
-                is Result.Failure -> profile_username.text = "Error occurred :("
-            }
-        })
+        profileViewModel = viewModel {
+            observe(profile, ::renderUserProfile)
+            failure(failure, ::renderFailure)
+        }
+        profileViewModel.getUserProfile("akinadude")//JohnnySC
+
+    }
+
+    private fun renderUserProfile(profile: UserProfile) {
+        profile_username.text = profile.login
+    }
+
+    private fun renderFailure(throwable: Throwable) {
+        profile_username.text = "Error occurred: ${throwable.message}"
     }
 }
