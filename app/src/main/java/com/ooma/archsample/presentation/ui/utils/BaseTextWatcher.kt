@@ -1,4 +1,4 @@
-package com.ooma.archsample.presentation.ui
+package com.ooma.archsample.presentation.ui.utils
 
 import android.text.Editable
 import android.text.TextWatcher

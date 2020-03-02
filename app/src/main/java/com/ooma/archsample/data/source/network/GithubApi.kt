@@ -1,6 +1,6 @@
 package com.ooma.archsample.data.source.network
 
-import com.ooma.archsample.data.model.UserProfile
+import com.ooma.archsample.data.model.User
 import com.ooma.archsample.data.model.UsersSearchResult
 import io.reactivex.Single
 
@@ -8,7 +8,7 @@ class GithubApi {
 
     private val service = GithubFactory.createRetrofitService()
 
-    fun getUserProfile(username: String): Single<UserProfile> = service.getUserProfile(username)
+    fun getUserProfile(username: String): Single<User> = service.getUserProfile(username)
 
     fun searchUsers(searchText: String): Single<UsersSearchResult> = service.searchUsers(searchText)
 }

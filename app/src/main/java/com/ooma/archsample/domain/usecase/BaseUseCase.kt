@@ -5,7 +5,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-abstract class UseCase<out Type, in Params> where Type : Any {
+abstract class BaseUseCase<out Type, in Params> where Type : Any {
 
     //todo It is hardly coupled with Single and thread switching. Need to fix it!
     abstract fun run(params: Params): Single<out Type>

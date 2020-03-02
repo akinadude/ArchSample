@@ -1,13 +1,13 @@
-package com.ooma.archsample
+package com.ooma.archsample.presentation.ui.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import com.ooma.archsample.presentation.view.ProfileFragment
+import com.ooma.archsample.Navigator
+import com.ooma.archsample.R
 
 class MainActivity : AppCompatActivity() {
 
-    val navigator: Navigator = Navigator(supportFragmentManager, this)
+    val navigator: Navigator = Navigator(supportFragmentManager)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

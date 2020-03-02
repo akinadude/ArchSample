@@ -1,4 +1,4 @@
-package com.ooma.archsample.presentation.view
+package com.ooma.archsample.presentation.ui.view
 
 import android.os.Bundle
 import android.view.LayoutInflater

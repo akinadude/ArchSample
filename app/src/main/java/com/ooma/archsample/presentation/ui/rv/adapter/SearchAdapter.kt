@@ -5,21 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.ooma.archsample.R
-import com.ooma.archsample.data.model.UserProfile
+import com.ooma.archsample.domain.model.SearchUserSuggestion
 import com.ooma.archsample.presentation.ui.rv.viewholder.SearchViewHolder
 
-class SearchAdapter : ListAdapter<UserProfile, SearchViewHolder>(diffCallback) {
-
-    //todo Use short User instead UserProfile
+class SearchAdapter(
+        private val clickListener: SearchUserClickListener
+) : ListAdapter<SearchUserSuggestion, SearchViewHolder>(diffCallback) {
 
     companion object {
 
-        private val diffCallback = object : DiffUtil.ItemCallback<UserProfile>() {
-            override fun areItemsTheSame(oldItem: UserProfile, newItem: UserProfile): Boolean {
+        private val diffCallback = object : DiffUtil.ItemCallback<SearchUserSuggestion>() {
+            override fun areItemsTheSame(oldItem: SearchUserSuggestion, newItem: SearchUserSuggestion): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: UserProfile, newItem: UserProfile): Boolean {
+            override fun areContentsTheSame(oldItem: SearchUserSuggestion, newItem: SearchUserSuggestion): Boolean {
                 return oldItem == newItem
             }
         }
@@ -27,7 +27,10 @@ class SearchAdapter : ListAdapter<UserProfile, SearchViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return SearchViewHolder(inflater.inflate(R.layout.item_rv_search_result, parent, false))
+        return SearchViewHolder(
+                inflater.inflate(R.layout.rv_item_user_search_result, parent, false),
+                clickListener
+        )
     }
 
     override fun onBindViewHolder(viewHolder: SearchViewHolder, position: Int) {
