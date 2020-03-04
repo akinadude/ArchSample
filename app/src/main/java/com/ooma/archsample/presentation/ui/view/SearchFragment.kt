@@ -9,11 +9,12 @@ import androidx.fragment.app.Fragment
 import com.ooma.archsample.R
 import com.ooma.archsample.domain.model.SearchUserSuggestion
 import com.ooma.archsample.extension.failure
-import com.ooma.archsample.extension.observe
+import com.ooma.archsample.extension.loading
+import com.ooma.archsample.extension.success
 import com.ooma.archsample.extension.viewModel
-import com.ooma.archsample.presentation.ui.utils.BaseTextWatcher
-import com.ooma.archsample.presentation.ui.rv.adapter.SearchUserClickListener
 import com.ooma.archsample.presentation.ui.rv.adapter.SearchAdapter
+import com.ooma.archsample.presentation.ui.rv.adapter.SearchUserClickListener
+import com.ooma.archsample.presentation.ui.utils.BaseTextWatcher
 import com.ooma.archsample.presentation.viewmodel.SearchViewModel
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -43,12 +44,13 @@ class SearchFragment : Fragment(), SearchUserClickListener {
         search_users_recycler_view.adapter = adapter
 
         viewModel = viewModel {
-            observe(searchUserResult, ::renderUserSuggestions)
+            success(searchSuggestions, ::renderUserSuggestions)
             failure(failure, ::renderFailure)
+            loading(loading, ::renderLoading)
         }
         viewModel.setNavigator((activity as MainActivity).navigator)
 
-        search_query_edit_text.addTextChangedListener(object : BaseTextWatcher {
+        search_users_query_edit_text.addTextChangedListener(object : BaseTextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 viewModel.performSearch(s.toString(), publishSubject)
             }
@@ -64,11 +66,25 @@ class SearchFragment : Fragment(), SearchUserClickListener {
         viewModel.onUserSuggestionClick(suggestion)
     }
 
+    private fun renderLoading(unit: Unit) {
+        search_users_error_text_view.visibility = View.GONE
+        search_users_recycler_view.visibility = View.GONE
+        search_users_progress_bar.visibility = View.VISIBLE
+    }
+
     private fun renderUserSuggestions(users: List<SearchUserSuggestion>) {
+        search_users_progress_bar.visibility = View.GONE
+        search_users_error_text_view.visibility = View.GONE
+        search_users_recycler_view.visibility = View.VISIBLE
+
         adapter.submitList(users)
     }
 
     private fun renderFailure(throwable: Throwable) {
+        search_users_progress_bar.visibility = View.GONE
+        search_users_recycler_view.visibility = View.GONE
+        search_users_error_text_view.visibility = View.VISIBLE
+
         search_users_error_text_view.text = "Error occurred: ${throwable.message}"
     }
 }

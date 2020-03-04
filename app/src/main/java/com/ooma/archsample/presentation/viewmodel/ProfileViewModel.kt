@@ -1,6 +1,5 @@
 package com.ooma.archsample.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.ooma.archsample.data.model.User
 import com.ooma.archsample.data.repository.UserRepository
@@ -25,17 +24,20 @@ class ProfileViewModel : BaseViewModel() {
 
     //todo Done! Use docdoc trick disposeBy
 
-    //todo Done! Transforming (mapping) models between layers
-    // It turns out that there is a necessity to map models from data layer into format which is suitable for the presentation layer.
-    // May be later we will need mapping in the domain layer.
-
     //todo Done! Implement search by user screen
     // The first screen contains a single button 'start'
     // The second screen is a list of searched users
     // The third screen is a single user screen
     // Implement navigation
 
-    //todo -> Need to create base use case and several types of use cases. Read the article about that.
+    //todo Get rid of deprecated ViewModelProviders.of
+
+    //todo Improve SearchViewModel: all rx related work should be done within use case.
+    // Now it is in the view and the view model
+
+    //todo Need to create base use case and several types of use cases. Read the article about that.
+
+    //todo Transforming (mapping) models between within domain layer
 
     //todo Result sealed class and result from the retrofit request.
     //todo What about loading state?
@@ -64,17 +66,15 @@ class ProfileViewModel : BaseViewModel() {
         get() = _profile
 
     fun getUserProfile(username: String) {
+        setLoading()
         getUserProfile.execute(
-                GetUserProfile.Params(username),
-                { handleUserProfile(it) },
-                {
-                    Log.d("TAG", "Error getting profile ${it.message}")
-                    handleFailure(it)
-                }
+            GetUserProfile.Params(username),
+            { setUserProfile(it) },
+            { setFailure(it) }
         ).disposeBy(this)
     }
 
-    private fun handleUserProfile(profile: User) {
+    private fun setUserProfile(profile: User) {
         _profile.value = profile
     }
 }

@@ -24,7 +24,7 @@ class SearchViewModel : BaseViewModel() {
 
     private val _searchSuggestions: MutableLiveData<List<SearchUserSuggestion>> by lazy { MutableLiveData<List<SearchUserSuggestion>>() }
 
-    val searchUserResult: MutableLiveData<List<SearchUserSuggestion>>
+    val searchSuggestions: MutableLiveData<List<SearchUserSuggestion>>
         get() = _searchSuggestions
 
     fun setNavigator(n: Navigator) {
@@ -33,6 +33,7 @@ class SearchViewModel : BaseViewModel() {
 
     fun performSearch(text: String, subject: PublishSubject<String>) {
         if (text.isNotEmpty()) {
+            setLoading()
             subject.onNext(text)
         } else {
             clear()
@@ -52,7 +53,7 @@ class SearchViewModel : BaseViewModel() {
                         { _searchSuggestions.value = mapper.toSuggestions(it.items) },
                         {
                             clear()
-                            failure.value = it
+                            _failure.value = it
                             subscribeToSubject(subject)
                         }
                 ).disposeBy(this)

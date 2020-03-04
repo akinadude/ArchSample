@@ -8,10 +8,20 @@ import io.reactivex.disposables.Disposable
 abstract class BaseViewModel : ViewModel(), DisposableViewModel {
 
     //todo it can be some Failure type if we want
-    var failure: MutableLiveData<Throwable> = MutableLiveData()
+    protected val _failure: MutableLiveData<Throwable> by lazy { MutableLiveData<Throwable>() }
+    protected val _loading: MutableLiveData<Unit> by lazy { MutableLiveData<Unit>() }
 
-    protected fun handleFailure(failure: Throwable) {
-        this.failure.value = failure
+    val failure: MutableLiveData<Throwable>
+        get() = _failure
+    val loading: MutableLiveData<Unit>
+        get() = _loading
+
+    protected fun setFailure(failure: Throwable) {
+        _failure.value = failure
+    }
+
+    protected fun setLoading() {
+        _loading.value = Unit
     }
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
