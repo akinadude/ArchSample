@@ -22,8 +22,6 @@ class ProfileViewModel : BaseViewModel() {
     // subscribeOn(Schedulers.io())
     // observeOn(AndroidSchedulers.mainThread())
 
-    //todo Done! Use docdoc trick disposeBy
-
     //todo Done! Implement search by user screen
     // The first screen contains a single button 'start'
     // The second screen is a list of searched users
@@ -37,7 +35,7 @@ class ProfileViewModel : BaseViewModel() {
 
     //todo Need to create base use case and several types of use cases. Read the article about that.
 
-    //todo Transforming (mapping) models between within domain layer
+    //todo Transforming (mapping) models between should be within domain layer
 
     //todo Result sealed class and result from the retrofit request.
     //todo What about loading state?
