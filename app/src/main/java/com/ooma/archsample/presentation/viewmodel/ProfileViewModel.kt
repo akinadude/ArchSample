@@ -31,7 +31,9 @@ class ProfileViewModel : BaseViewModel() {
     //todo Done! Get rid of deprecated ViewModelProviders.of
 
     //todo Improve SearchViewModel: all rx related work should be done within use case.
-    // Now it is in the view and the view model
+    // Currently it is placed within the view and the view model
+
+    //todo Read about repository implementation. Then implement it properly.
 
     //todo Need to create base use case and several types of use cases. Read the article about that.
 
@@ -41,8 +43,6 @@ class ProfileViewModel : BaseViewModel() {
     //todo What about loading state?
 
     //todo RxJava and MVVM. Can they coexist? Observable vs live data
-
-    //todo Read about repository implementation. Then implement it properly.
 
     //todo Revisit clean arch layers' boundaries and package structure
 
