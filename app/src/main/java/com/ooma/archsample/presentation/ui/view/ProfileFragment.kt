@@ -1,5 +1,6 @@
 package com.ooma.archsample.presentation.ui.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +33,17 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var viewModel: ProfileViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        viewModel = viewModel {
+            success(profile, ::renderUserProfile)//todo Create composite source of a model
+            failure(failure, ::renderFailure)
+            loading(loading, ::renderLoading)
+        }
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -42,14 +53,8 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        profileViewModel = viewModel {
-            success(profile, ::renderUserProfile)//todo Create composite source of a model
-            failure(failure, ::renderFailure)
-            loading(loading, ::renderLoading)
-        }
-
         val login = arguments?.getString(bundle_user_login) ?: "JohnnySC"
-        profileViewModel.getUserProfile(login)
+        viewModel.getUserProfile(login)
     }
 
     private fun renderLoading(unit: Unit) {

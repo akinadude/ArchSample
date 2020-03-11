@@ -13,23 +13,17 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
-class SearchViewModel : BaseViewModel() {
+class SearchViewModel(private val navigator: Navigator) : BaseViewModel() {
 
     private val githubApi = GithubApi()
     private val repository = UserRepository(githubApi)
     private val searchUsers = SearchUsers(repository)
     private val mapper = SearchUsersMapper()
 
-    private lateinit var navigator: Navigator
-
     private val _searchSuggestions: MutableLiveData<List<SearchUserSuggestion>> by lazy { MutableLiveData<List<SearchUserSuggestion>>() }
 
     val searchSuggestions: MutableLiveData<List<SearchUserSuggestion>>
         get() = _searchSuggestions
-
-    fun setNavigator(n: Navigator) {
-        navigator = n
-    }
 
     fun performSearch(text: String, subject: PublishSubject<String>) {
         if (text.isNotEmpty()) {

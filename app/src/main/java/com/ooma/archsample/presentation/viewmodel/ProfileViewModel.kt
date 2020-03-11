@@ -28,7 +28,7 @@ class ProfileViewModel : BaseViewModel() {
     // The third screen is a single user screen
     // Implement navigation
 
-    //todo Get rid of deprecated ViewModelProviders.of
+    //todo Done! Get rid of deprecated ViewModelProviders.of
 
     //todo Improve SearchViewModel: all rx related work should be done within use case.
     // Now it is in the view and the view model

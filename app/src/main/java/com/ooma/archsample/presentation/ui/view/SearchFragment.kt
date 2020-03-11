@@ -1,5 +1,6 @@
 package com.ooma.archsample.presentation.ui.view
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.view.LayoutInflater
@@ -16,23 +17,31 @@ import com.ooma.archsample.presentation.ui.rv.adapter.SearchAdapter
 import com.ooma.archsample.presentation.ui.rv.adapter.SearchUserClickListener
 import com.ooma.archsample.presentation.ui.utils.BaseTextWatcher
 import com.ooma.archsample.presentation.viewmodel.SearchViewModel
+import com.ooma.archsample.presentation.viewmodel.factory.SearchViewModelFactory
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchFragment : Fragment(), SearchUserClickListener {
+class SearchFragment : Fragment(),
+        SearchUserClickListener {
 
     companion object {
         fun newInstance() = SearchFragment()
     }
 
     private val publishSubject: PublishSubject<String> = PublishSubject.create()
-
     private val adapter = SearchAdapter(this)
-
-    /*private val viewModel: SearchViewModel by lazy {
-        ViewModelProviders.of(this).get(SearchViewModel::class.java)
-    }*/
     private lateinit var viewModel: SearchViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val factory = SearchViewModelFactory((activity as MainActivity).navigator)
+        viewModel = viewModel(factory) {
+            success(searchSuggestions, ::renderUserSuggestions)
+            failure(failure, ::renderFailure)
+            loading(loading, ::renderLoading)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
@@ -42,13 +51,6 @@ class SearchFragment : Fragment(), SearchUserClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         search_users_recycler_view.adapter = adapter
-
-        viewModel = viewModel {
-            success(searchSuggestions, ::renderUserSuggestions)
-            failure(failure, ::renderFailure)
-            loading(loading, ::renderLoading)
-        }
-        viewModel.setNavigator((activity as MainActivity).navigator)
 
         search_users_query_edit_text.addTextChangedListener(object : BaseTextWatcher {
             override fun afterTextChanged(s: Editable?) {
