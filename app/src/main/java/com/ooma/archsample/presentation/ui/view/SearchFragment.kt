@@ -18,7 +18,6 @@ import com.ooma.archsample.presentation.ui.rv.adapter.SearchUserClickListener
 import com.ooma.archsample.presentation.ui.utils.BaseTextWatcher
 import com.ooma.archsample.presentation.viewmodel.SearchViewModel
 import com.ooma.archsample.presentation.viewmodel.factory.SearchViewModelFactory
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment(),
@@ -28,7 +27,6 @@ class SearchFragment : Fragment(),
         fun newInstance() = SearchFragment()
     }
 
-    private val publishSubject: PublishSubject<String> = PublishSubject.create()
     private val adapter = SearchAdapter(this)
     private lateinit var viewModel: SearchViewModel
 
@@ -52,16 +50,12 @@ class SearchFragment : Fragment(),
 
         search_users_recycler_view.adapter = adapter
 
+        viewModel.observeSearchView()
         search_users_query_edit_text.addTextChangedListener(object : BaseTextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                viewModel.performSearch(s.toString(), publishSubject)
+                viewModel.searchSubject.onNext(s.toString())
             }
         })
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.subscribeToSubject(publishSubject)
     }
 
     override fun onSuggestionClick(suggestion: SearchUserSuggestion) {

@@ -20,26 +20,26 @@ class SearchViewModel(private val navigator: Navigator) : BaseViewModel() {
     private val searchUsers = SearchUsers(repository)
     private val mapper = SearchUsersMapper()
 
+    private val _subject: PublishSubject<String> = PublishSubject.create()
     private val _searchSuggestions: MutableLiveData<List<SearchUserSuggestion>> by lazy { MutableLiveData<List<SearchUserSuggestion>>() }
 
     val searchSuggestions: MutableLiveData<List<SearchUserSuggestion>>
         get() = _searchSuggestions
 
-    fun performSearch(text: String, subject: PublishSubject<String>) {
-        if (text.isNotEmpty()) {
-            setLoading()
-            subject.onNext(text)
-        } else {
-            clear()
-        }
-    }
+    val searchSubject: PublishSubject<String>
+        get() = _subject
 
-    fun subscribeToSubject(subject: PublishSubject<String>) {
-        //todo Try to move it to the use case class
-        subject.debounce(300, TimeUnit.MILLISECONDS)
-                .switchMap { searchText ->
+    //todo What about SearchUseCase with different execute method?
+    //todo From the view model this invocation should look like this:
+    // searchUsers.execute(params, onSuccess, onFailure)
+    fun observeSearchView() {
+        _subject.debounce(300, TimeUnit.MILLISECONDS)
+                .filter { it.isNotBlank() }
+                .distinctUntilChanged()
+                .switchMapSingle { searchText ->
+                    //todo Maybe we can move this code into the use case?
+                    //todo Maybe run method for SearchUser use case should be written in another fashion?
                     searchUsers.run(SearchUsers.Params(searchText))
-                            .toObservable()
                             .subscribeOn(Schedulers.io())
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -48,7 +48,7 @@ class SearchViewModel(private val navigator: Navigator) : BaseViewModel() {
                         {
                             clear()
                             _failure.value = it
-                            subscribeToSubject(subject)
+                            observeSearchView()
                         }
                 ).disposeBy(this)
     }
