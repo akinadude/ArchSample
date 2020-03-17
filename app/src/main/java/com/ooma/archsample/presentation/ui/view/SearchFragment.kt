@@ -53,7 +53,7 @@ class SearchFragment : Fragment(),
         viewModel.observeSearchView()
         search_users_query_edit_text.addTextChangedListener(object : BaseTextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                viewModel.searchSubject.onNext(s.toString())
+                viewModel.setSearchText(s.toString())
             }
         })
     }

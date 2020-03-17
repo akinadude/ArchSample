@@ -26,12 +26,12 @@ class SearchViewModel(private val navigator: Navigator) : BaseViewModel() {
     val searchSuggestions: MutableLiveData<List<SearchUserSuggestion>>
         get() = _searchSuggestions
 
-    val searchSubject: PublishSubject<String>
-        get() = _subject
+    fun setSearchText(s: String){
+        _subject.onNext(s)
+    }
 
-    //todo What about SearchUseCase with different execute method?
     //todo From the view model this invocation should look like this:
-    // searchUsers.execute(params, onSuccess, onFailure)
+    // searchUsers.execute(params, onSuccess, onFailure) the same as GetUserProfile use case
     fun observeSearchView() {
         _subject.debounce(300, TimeUnit.MILLISECONDS)
                 .filter { it.isNotBlank() }
