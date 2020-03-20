@@ -2,15 +2,20 @@ package com.ooma.archsample.presentation.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.ooma.archsample.data.model.User
-import com.ooma.archsample.data.repository.UserRepository
+import com.ooma.archsample.data.repository.*
 import com.ooma.archsample.data.source.network.GithubApi
+import com.ooma.archsample.data.source.persistence.DatabaseApi
 import com.ooma.archsample.domain.usecase.GetUserProfile
 import com.ooma.archsample.extension.disposeBy
 
 class ProfileViewModel : BaseViewModel() {
 
     private val githubApi = GithubApi()
-    private val repository = UserRepository(githubApi)
+    private val databaseApi =
+        DatabaseApi()
+    private val remoteDataSource = UserDataGateway(githubApi)
+    private val localDataSource = UserDataGateway(databaseApi)
+    private val repository = UserRepository(remoteDataSource, localDataSource)
     private val getUserProfile = GetUserProfile(repository)
 
     private val _profile: MutableLiveData<User> by lazy { MutableLiveData<User>() }
@@ -30,19 +35,25 @@ class ProfileViewModel : BaseViewModel() {
 
     //todo Done! Get rid of deprecated ViewModelProviders.of
 
+    //todo Doing... Read about repository implementation. Then implement it properly.
+
     //todo Improve SearchViewModel: all rx related work should be done within use case.
     // Currently it is placed within the view and the view model
 
-    //todo Read about repository implementation. Then implement it properly.
-
     //todo Need to create base use case and several types of use cases. Read the article about that.
+
+    //todo Dive deeply into use case field. What are they used for
+    // getting data
+    // core business logic of the app
+    // navigation
+    // ...
 
     //todo Transforming (mapping) models between should be within domain layer
 
     //todo Result sealed class and result from the retrofit request.
     //todo What about loading state?
 
-    //todo RxJava and MVVM. Can they coexist? Observable vs live data
+    //todo RxJava and MVVM. Can they coexist? Observable vs LiveData types
 
     //todo Revisit clean arch layers' boundaries and package structure
 

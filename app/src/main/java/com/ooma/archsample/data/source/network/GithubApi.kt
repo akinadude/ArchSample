@@ -2,15 +2,25 @@ package com.ooma.archsample.data.source.network
 
 import com.ooma.archsample.data.model.User
 import com.ooma.archsample.data.model.UsersSearchResult
+import com.ooma.archsample.data.repository.UserDataDispatcher
 import io.reactivex.Single
 
-class GithubApi {
+//Framework layer
+class GithubApi : UserDataDispatcher {
 
-    private val service = GithubFactory.createRetrofitService()
+    private val service = GithubApiFactory.createRetrofitService()
 
-    fun getUserProfile(username: String): Single<User> = service.getUserProfile(username)
+    override fun getUserProfile(username: String): Single<User> = service.getUserProfile(username)
 
-    fun searchUsers(searchText: String): Single<UsersSearchResult> = service.searchUsers(searchText)
+    override fun searchUsers(searchText: String): Single<UsersSearchResult> = service.searchUsers(searchText)
+
+    override fun saveUserProfile(username: String, user: User) {
+        TODO("Not yet implemented")
+    }
+
+    override fun saveSearchedUsers(searchText: String, users: List<User>) {
+        TODO("Not yet implemented")
+    }
 }
 //introduce RxJava
 //read an article/see a repo/watch a video about RxJava and MVVM

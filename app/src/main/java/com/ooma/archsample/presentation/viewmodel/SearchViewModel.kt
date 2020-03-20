@@ -2,6 +2,8 @@ package com.ooma.archsample.presentation.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.ooma.archsample.Navigator
+import com.ooma.archsample.data.repository.UserDataGateway
+import com.ooma.archsample.data.source.persistence.DatabaseApi
 import com.ooma.archsample.data.repository.UserRepository
 import com.ooma.archsample.data.source.network.GithubApi
 import com.ooma.archsample.domain.model.SearchUserSuggestion
@@ -16,7 +18,11 @@ import java.util.concurrent.TimeUnit
 class SearchViewModel(private val navigator: Navigator) : BaseViewModel() {
 
     private val githubApi = GithubApi()
-    private val repository = UserRepository(githubApi)
+    private val databaseApi =
+        DatabaseApi()
+    private val remoteDataSource = UserDataGateway(githubApi)
+    private val localDataSource = UserDataGateway(databaseApi)
+    private val repository = UserRepository(remoteDataSource, localDataSource)
     private val searchUsers = SearchUsers(repository)
     private val mapper = SearchUsersMapper()
 
