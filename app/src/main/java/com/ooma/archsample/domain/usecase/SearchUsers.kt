@@ -22,7 +22,7 @@ class SearchUsers(private val repository: UserRepository) :
             }
     }
 
-    fun setSubjectItem(searchText: String) {
+    fun setSearchText(searchText: String) {
         super.setSubjectItem(Params(searchText))
     }
 

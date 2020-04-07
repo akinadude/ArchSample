@@ -12,7 +12,7 @@ import com.ooma.archsample.domain.usecase.SearchUsers
 import com.ooma.archsample.extension.disposeBy
 import com.ooma.archsample.presentation.mapper.SearchUsersMapper
 
-class SearchViewModel(private val navigator: Navigator) : BaseViewModel() {
+class SearchViewModel(private val navigator: Navigator) : RequestDataViewModel() {
 
     private val githubApi = GithubApi()
     private val memoryCache = MemoryCacheApi()
@@ -29,10 +29,11 @@ class SearchViewModel(private val navigator: Navigator) : BaseViewModel() {
 
     fun setSearchText(s: String) {
         if (s.isNotBlank()) {
-            searchUsers.setSubjectItem(s)
+            setLoading()
+            searchUsers.setSearchText(s)
         } else {
             clear()
-            _failure.value = NothingFound
+            setFailure(NothingFound)
         }
     }
 
@@ -41,8 +42,7 @@ class SearchViewModel(private val navigator: Navigator) : BaseViewModel() {
             { _searchSuggestions.value = mapper.toSuggestions(it.items) },
             {
                 clear()
-                _failure.value = it
-                observeSearchView()
+                setFailure(it)
             }
         ).disposeBy(this)
     }

@@ -21,7 +21,7 @@ import com.ooma.archsample.presentation.viewmodel.factory.SearchViewModelFactory
 import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment(),
-        SearchUserClickListener {
+    SearchUserClickListener {
 
     companion object {
         fun newInstance() = SearchFragment()
@@ -41,9 +41,11 @@ class SearchFragment : Fragment(),
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_search, container, false)
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_search, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,7 +75,10 @@ class SearchFragment : Fragment(),
         search_users_error_text_view.visibility = View.GONE
         search_users_recycler_view.visibility = View.VISIBLE
 
-        adapter.submitList(users)
+        //todo deal with seeing-previous-list-for-a-moment issue
+        search_users_recycler_view.adapter = SearchAdapter(this)
+        (search_users_recycler_view.adapter as SearchAdapter).submitList(users)
+        //adapter.submitList(users)
     }
 
     private fun renderFailure(throwable: Throwable) {

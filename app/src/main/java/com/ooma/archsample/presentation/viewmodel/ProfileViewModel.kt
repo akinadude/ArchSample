@@ -9,7 +9,7 @@ import com.ooma.archsample.data.source.persistence.MemoryCacheApi
 import com.ooma.archsample.domain.usecase.GetUserProfile
 import com.ooma.archsample.extension.disposeBy
 
-class ProfileViewModel : BaseViewModel() {
+class ProfileViewModel : RequestDataViewModel() {
 
     private val githubApi = GithubApi()
     private val memoryCache = MemoryCacheApi()
