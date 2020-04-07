@@ -2,11 +2,11 @@ package com.ooma.archsample.data.source.network
 
 import com.ooma.archsample.data.model.User
 import com.ooma.archsample.data.model.UsersSearchResult
-import com.ooma.archsample.data.repository.UserDataDispatcher
+import com.ooma.archsample.data.repository.UserDataAccessor
 import io.reactivex.Single
 
 //Framework layer
-class GithubApi : UserDataDispatcher {
+class GithubApi : UserDataAccessor {
 
     private val service = GithubApiFactory.createRetrofitService()
 

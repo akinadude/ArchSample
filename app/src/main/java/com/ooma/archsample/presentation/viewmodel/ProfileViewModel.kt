@@ -2,20 +2,20 @@ package com.ooma.archsample.presentation.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.ooma.archsample.data.model.User
-import com.ooma.archsample.data.repository.*
+import com.ooma.archsample.data.repository.UserDataGateway
+import com.ooma.archsample.data.repository.UserRepository
 import com.ooma.archsample.data.source.network.GithubApi
-import com.ooma.archsample.data.source.persistence.DatabaseApi
+import com.ooma.archsample.data.source.persistence.MemoryCacheApi
 import com.ooma.archsample.domain.usecase.GetUserProfile
 import com.ooma.archsample.extension.disposeBy
 
 class ProfileViewModel : BaseViewModel() {
 
     private val githubApi = GithubApi()
-    private val databaseApi =
-        DatabaseApi()
-    private val remoteDataSource = UserDataGateway(githubApi)
-    private val localDataSource = UserDataGateway(databaseApi)
-    private val repository = UserRepository(remoteDataSource, localDataSource)
+    private val memoryCache = MemoryCacheApi()
+    private val remote = UserDataGateway(githubApi)
+    private val local = UserDataGateway(memoryCache)
+    private val repository = UserRepository(remote, local)
     private val getUserProfile = GetUserProfile(repository)
 
     private val _profile: MutableLiveData<User> by lazy { MutableLiveData<User>() }
@@ -31,18 +31,22 @@ class ProfileViewModel : BaseViewModel() {
     // The first screen contains a single button 'start'
     // The second screen is a list of searched users
     // The third screen is a single user screen
-    // Implement navigation
+    // Implement simple navigation
 
     //todo Done! Get rid of deprecated ViewModelProviders.of
 
-    //todo Doing... Read about repository implementation. Then implement it properly.
+    //todo Read about repository implementation. Then implement it properly (remote, database, in-memory).
+    // Done! Implement common interface for remote and in-memory data sources
+    // Done! Implement simple in-memory cache
+    // Read about complex solutions in Gitfox app or in articles
+    // Implement database related solution (Room, SqlBright, ...)
 
-    //todo Improve SearchViewModel: all rx related work should be done within use case.
+    //todo Doing... Improve SearchViewModel: all rx related work should be done within use case.
     // Currently it is placed within the view and the view model
 
-    //todo Need to create base use case and several types of use cases. Read the article about that.
+    //todo Next... Need to create base use case and several types of use cases. Read the article about that.
 
-    //todo Dive deeply into use case field. What are they used for
+    //todo Next... Dive deeply into use case field. What are they used for
     // getting data
     // core business logic of the app
     // navigation
@@ -70,6 +74,8 @@ class ProfileViewModel : BaseViewModel() {
     //todo Investigate navigation
 
     //todo Implement login screen and reproduce the case when auth token is expired
+
+    //todo Think about modularisation. Read about feature-module approach.
 
     val profile: MutableLiveData<User>
         get() = _profile

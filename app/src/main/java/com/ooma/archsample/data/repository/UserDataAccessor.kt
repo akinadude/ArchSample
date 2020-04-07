@@ -5,7 +5,7 @@ import com.ooma.archsample.data.model.UsersSearchResult
 import io.reactivex.Single
 
 //Data layer
-interface UserDataDispatcher {
+interface UserDataAccessor {
     fun getUserProfile(username: String): Single<User>
     fun searchUsers(searchText: String): Single<UsersSearchResult>
     fun saveUserProfile(username: String, user: User)

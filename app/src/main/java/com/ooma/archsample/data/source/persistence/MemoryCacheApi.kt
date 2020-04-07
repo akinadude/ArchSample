@@ -2,24 +2,24 @@ package com.ooma.archsample.data.source.persistence
 
 import com.ooma.archsample.data.model.User
 import com.ooma.archsample.data.model.UsersSearchResult
-import com.ooma.archsample.data.repository.UserDataDispatcher
+import com.ooma.archsample.data.repository.UserDataAccessor
 import io.reactivex.Single
 
 //Framework layer
-class DatabaseApi : UserDataDispatcher {
+class MemoryCacheApi : UserDataAccessor {
 
-    private val database = FakeDatabase()
+    private val memoryCache = MemoryCache()
 
-    override fun getUserProfile(username: String): Single<User> = database.getUserProfile(username)
+    override fun getUserProfile(username: String): Single<User> = memoryCache.getUserProfile(username)
 
     override fun searchUsers(searchText: String): Single<UsersSearchResult> =
-        database.getSearchedUsers(searchText)
+        memoryCache.getSearchedUsers(searchText)
 
     override fun saveUserProfile(username: String, user: User) {
-        database.saveUserProfile(username, user)
+        memoryCache.saveUserProfile(username, user)
     }
 
     override fun saveSearchedUsers(searchText: String, users: List<User>) {
-        database.saveSearchedUsers(searchText, users)
+        memoryCache.saveSearchedUsers(searchText, users)
     }
 }
