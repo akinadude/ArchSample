@@ -43,8 +43,8 @@ class SearchViewModel(private val navigator: Navigator) : BaseViewModel() {
                 clear()
                 _failure.value = it
                 observeSearchView()
-            })
-            .disposeBy(this)
+            }
+        ).disposeBy(this)
     }
 
     fun onUserSuggestionClick(suggestion: SearchUserSuggestion) {
