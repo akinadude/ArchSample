@@ -21,7 +21,7 @@ class MemoryCache {
         val user = usersLruCache.get(username)
         user?.let {
             emitter.onSuccess(it)
-        } ?: emitter.onError(NoData)
+        } ?: emitter.onError(NoDataError)
     }
 
     fun saveSearchedUsers(searchText: String, list: List<User>) {
@@ -33,6 +33,6 @@ class MemoryCache {
         list?.let {
             val searchResult = UsersSearchResult(it.size.toLong(), false, it)
             emitter.onSuccess(searchResult)
-        } ?: emitter.onError(NoData)
+        } ?: emitter.onError(NoDataError)
     }
 }

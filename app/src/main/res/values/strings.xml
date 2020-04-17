@@ -3,4 +3,6 @@
 
     <string name="search_users_error">Произошла ошибка, попробуйте выполнить действие позже</string>
     <string name="search_users_http_403_error">Произошла http-ошибка 403, попробуйте выполнить действие позже</string>
+
+    <string name="search_initial_hint">Start to search a user\nor a project</string>
 </resources>

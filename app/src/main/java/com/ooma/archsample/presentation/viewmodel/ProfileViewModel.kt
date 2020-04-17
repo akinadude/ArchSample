@@ -38,21 +38,27 @@ class ProfileViewModel : RequestDataViewModel() {
     //todo Read about repository implementation. Then implement it properly (remote, database, in-memory).
     // Done! Implement common interface for remote and in-memory data sources
     // Done! Implement simple in-memory cache
-    // Read about complex solutions in Gitfox app or in articles
+    // Read about comprehensive solutions in Gitfox app or in articles
     // Implement database related solution (Room, SqlBright, ...)
 
-    //todo Doing... Improve SearchViewModel: all rx related work should be done within use case.
+    //todo Done! Improve SearchViewModel: all rx related work should be done within use case.
     // Currently it is placed within the view and the view model
 
-    //todo Next... Need to create base use case and several types of use cases. Read the article about that.
+    //todo Done! Need to create base use case and several types of use cases. Read the article about that.
 
-    //todo Next... Dive deeply into use case field. What are they used for
+    //todo [Doing...]
+    //todo Implement Environment class (for storing current backend url)
+    //todo Implement API related classes the same way as in docdoc app
+    //todo Implement resource provider (context, ...). See docdoc app.
+
+    //todo [Next] Dive deeply into use case field. What are they used for
     // getting data
     // core business logic of the app
     // navigation
     // ...
 
-    //todo Transforming (mapping) models between should be within domain layer
+    //todo Transforming (mapping) models between should be within domain layer.
+    // It can be done on Computation rx scheduler
 
     //todo Result sealed class and result from the retrofit request.
     //todo What about loading state?
@@ -62,12 +68,6 @@ class ProfileViewModel : RequestDataViewModel() {
     //todo Revisit clean arch layers' boundaries and package structure
 
     //todo Clear way of error handling using Rx (look at Fernando Cejas sample and docdoc app)
-
-    //todo Implement Environment class (for storing current backend url)
-
-    //todo Implement API related classes the same way as in docdoc app
-
-    //todo Implement resource provider (context, ...). See docdoc app.
 
     //todo Introduce DI. Koin or Dagger2?
 

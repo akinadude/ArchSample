@@ -8,11 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.ooma.archsample.R
+import com.ooma.archsample.domain.model.Initial
+import com.ooma.archsample.domain.model.SearchItem
 import com.ooma.archsample.domain.model.SearchUserSuggestion
-import com.ooma.archsample.extension.failure
-import com.ooma.archsample.extension.loading
-import com.ooma.archsample.extension.success
-import com.ooma.archsample.extension.viewModel
+import com.ooma.archsample.extension.*
 import com.ooma.archsample.presentation.ui.rv.adapter.SearchAdapter
 import com.ooma.archsample.presentation.ui.rv.adapter.SearchUserClickListener
 import com.ooma.archsample.presentation.ui.utils.BaseTextWatcher
@@ -27,6 +26,7 @@ class SearchFragment : Fragment(),
         fun newInstance() = SearchFragment()
     }
 
+    //todo Can we move adapter to the view model?
     private val adapter = SearchAdapter(this)
     private lateinit var viewModel: SearchViewModel
 
@@ -35,9 +35,10 @@ class SearchFragment : Fragment(),
 
         val factory = SearchViewModelFactory((activity as MainActivity).navigator)
         viewModel = viewModel(factory) {
+            initial(initial, ::renderInitial)
+            loading(loading, ::renderLoading)
             success(searchSuggestions, ::renderUserSuggestions)
             failure(failure, ::renderFailure)
-            loading(loading, ::renderLoading)
         }
     }
 
@@ -58,10 +59,18 @@ class SearchFragment : Fragment(),
                 viewModel.setSearchText(s.toString())
             }
         })
+        renderInitial(Unit)
     }
 
     override fun onSuggestionClick(suggestion: SearchUserSuggestion) {
         viewModel.onUserSuggestionClick(suggestion)
+    }
+
+    private fun renderInitial(unit: Unit) {
+        search_users_progress_bar.visibility = View.GONE
+        search_users_error_text_view.visibility = View.GONE
+        search_users_recycler_view.visibility = View.VISIBLE
+        updateAdapter(listOf(Initial))
     }
 
     private fun renderLoading(unit: Unit) {
@@ -70,15 +79,11 @@ class SearchFragment : Fragment(),
         search_users_progress_bar.visibility = View.VISIBLE
     }
 
-    private fun renderUserSuggestions(users: List<SearchUserSuggestion>) {
+    private fun renderUserSuggestions(users: List<SearchItem>) {
         search_users_progress_bar.visibility = View.GONE
         search_users_error_text_view.visibility = View.GONE
         search_users_recycler_view.visibility = View.VISIBLE
-
-        //todo deal with seeing-previous-list-for-a-moment issue
-        search_users_recycler_view.adapter = SearchAdapter(this)
-        (search_users_recycler_view.adapter as SearchAdapter).submitList(users)
-        //adapter.submitList(users)
+        updateAdapter(users)
     }
 
     private fun renderFailure(throwable: Throwable) {
@@ -87,5 +92,15 @@ class SearchFragment : Fragment(),
         search_users_error_text_view.visibility = View.VISIBLE
 
         search_users_error_text_view.text = "Error occurred: ${throwable.message}"
+    }
+
+    private fun updateAdapter(newList: List<SearchItem>) {
+        //todo Tried just call submitList(newList).
+        // It caused flicking previous list before the new one is being shown.
+        // Possible solutions:
+        // 1) replace ListAdapter by RecyclerView.Adapter
+        // 2) see sources of other apps — Gitfox, Telegram
+        search_users_recycler_view.adapter = SearchAdapter(this)
+        (search_users_recycler_view.adapter as SearchAdapter).submitList(newList)
     }
 }

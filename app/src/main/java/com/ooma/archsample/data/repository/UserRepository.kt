@@ -3,7 +3,7 @@ package com.ooma.archsample.data.repository
 import android.util.Log
 import com.ooma.archsample.data.model.User
 import com.ooma.archsample.data.model.UsersSearchResult
-import com.ooma.archsample.data.source.persistence.NoData
+import com.ooma.archsample.data.source.persistence.NoDataError
 import io.reactivex.Single
 
 //todo There can be different implementation of the strategy for getting/caching data
@@ -14,6 +14,9 @@ class UserRepository(
 ) {
     //todo there should be root class for all models (consider data and domain levels)
 
+    //todo Similar scenario of getting data from different data sources
+    //todo Similar interface of UserRepository and gateways
+
     //todo Try Maybe idea
     fun getUserProfile(username: String): Single<User> =
         memory.getUserProfile(username)
@@ -21,7 +24,7 @@ class UserRepository(
                 Log.i("REPO", "Fetching from memory by key $username.")
             }.onErrorResumeNext { error ->
                 when (error) {
-                    is NoData -> {
+                    is NoDataError -> {
                         Log.i("REPO", "Fetching from remote by key $username.")
                         remote.getUserProfile(username)
                             .doOnSuccess {
@@ -39,7 +42,7 @@ class UserRepository(
                 Log.i("REPO", "Fetching from memory by key $searchText.")
             }.onErrorResumeNext { error ->
                 when (error) {
-                    is NoData -> {
+                    is NoDataError -> {
                         Log.i("REPO", "Fetching from remote by key $searchText.")
                         remote.searchUsers(searchText)
                             .doOnSuccess {
