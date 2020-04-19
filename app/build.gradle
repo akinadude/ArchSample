@@ -29,6 +29,10 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -57,7 +61,13 @@ dependencies {
     // common libs
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    // tests
     testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-core:2.23.0"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    /*testImplementation "org.robolectric:robolectric:$robolectric_version"
+    testImplementation 'io.github.benas:random-beans:3.7.0'
+    testImplementation 'org.json:json:20180130'*/
 }
